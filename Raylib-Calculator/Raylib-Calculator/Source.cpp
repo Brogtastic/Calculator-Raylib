@@ -1,16 +1,3 @@
-/*******************************************************************************************
-*
-*   raylib [core] example - Keyboard input
-*
-*   Example originally created with raylib 1.0, last time updated with raylib 1.0
-*
-*   Example licensed under an unmodified zlib/libpng license, which is an OSI-certified,
-*   BSD-like license that allows static linking with closed source software
-*
-*   Copyright (c) 2014-2023 Ramon Santamaria (@raysan5)
-*
-********************************************************************************************/
-
 #include "raylib.h"
 #include <iostream>
 #include <string>
@@ -18,6 +5,13 @@
 #include "Evaluation.h"
 using namespace std;
 #define print(x) cout << x
+/*
+*
+* TO-DO:
+* Click to put cursor somewhere
+* Add text to buttons
+* 
+*/
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -34,8 +28,8 @@ int main(void)
 {
 	// Initialization
 	//--------------------------------------------------------------------------------------
-	const int screenWidth = 576;
-	const int screenHeight = 700;
+	const int screenWidth = 475;
+	const int screenHeight = 635;
 
 	InitWindow(screenWidth, screenHeight, "raylib calculator");
 
@@ -47,6 +41,16 @@ int main(void)
 	const char * resultsText = myString.c_str();
 	const char * calculationsText;
 	const char * typeline;
+
+	float buttonWidth = 80.0f;
+	float buttonHeight = 100.0f;
+	float row1 = 175.0f;
+	float spacing = 15.0f;
+	float row2 = buttonHeight + row1 + spacing;
+	float row3 = buttonHeight + row2 + spacing;
+	float row4 = buttonHeight + row3 + spacing;
+	float row5 = buttonHeight + row4 + spacing;
+
 
 	SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 	//--------------------------------------------------------------------------------------
@@ -119,7 +123,44 @@ int main(void)
 			DrawText(typeline, 12 + pixelTextLength, 10, fontSize, DARKGRAY);
 		}
 
-		DrawRectangle(45, 175, 160, 120, BLUE);
+		//ROW0
+		//DrawRectangleRounded({ 15, row1, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		//DrawRectangleRounded({ spacing * 3 + buttonWidth - 20, row1, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		//DrawRectangleRounded({ spacing * 9 + buttonWidth - 20, row1, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		//DrawRectangleRounded({ spacing * 15 + buttonWidth - 20, row1, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		//DrawRectangleRounded({ spacing * 21 + buttonWidth - 20, row1, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		//ROW1
+		DrawRectangleRounded({ 15, row1, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		DrawRectangleRounded({ spacing * 3 + buttonWidth - 20, row1, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		DrawRectangleRounded({ spacing * 9 + buttonWidth - 20, row1, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		DrawRectangleRounded({ spacing * 15 + buttonWidth - 20, row1, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		DrawRectangleRounded({ spacing * 21 + buttonWidth - 20, row1, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		//ROW2
+		DrawRectangleRounded({ 15, row2, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		DrawRectangleRounded({ spacing * 3 + buttonWidth - 20, row2, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		DrawRectangleRounded({ spacing * 9 + buttonWidth - 20, row2, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		DrawRectangleRounded({ spacing * 15 + buttonWidth - 20, row2, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		DrawRectangleRounded({ spacing * 21 + buttonWidth - 20, row2, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		//ROW3
+		DrawRectangleRounded({ 15, row3, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		DrawRectangleRounded({ spacing * 3 + buttonWidth - 20, row3, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		DrawRectangleRounded({ spacing * 9 + buttonWidth - 20, row3, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		DrawRectangleRounded({ spacing * 15 + buttonWidth - 20, row3, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		DrawRectangleRounded({ spacing * 21 + buttonWidth - 20, row3, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		//ROW4
+		DrawRectangleRounded({ 15, row4, buttonWidth *2 + spacing-8, buttonHeight }, 0.2f, 2, MAROON);
+		DrawRectangleRounded({ spacing * 9 + buttonWidth - 20, row4, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		DrawRectangleRounded({ spacing * 15 + buttonWidth - 20, row4, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+		DrawRectangleRounded({ spacing * 21 + buttonWidth - 20, row4, buttonWidth, buttonHeight }, 0.2f, 2, MAROON);
+
+		if (IsKeyPressed(KEY_A)) {
+			spacing -= 1.0f;
+			print("\n" + to_string(spacing));
+		}
+		if (IsKeyPressed(KEY_S)) {
+			spacing += 1.0f;
+			print("\n" + to_string(spacing));
+		}
 
 		EndDrawing();
 		//----------------------------------------------------------------------------------
@@ -132,3 +173,11 @@ int main(void)
 
 	return 0;
 }
+
+/*
+Arrows, A/C
+1, 2, 3, + , -
+4, 5, 6, * , /
+7, 8, 9, ( , )
+  0 , ., %, ^
+*/
