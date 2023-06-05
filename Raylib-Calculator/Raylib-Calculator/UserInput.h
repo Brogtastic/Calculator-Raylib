@@ -12,60 +12,62 @@ extern int fontSize;
 extern float pixelTextMinus;
 extern int cursorPos;
 
+extern string buttonPress;
+
 string GetUserInput(string stringUpdate) {
 
-	if (IsKeyPressed(KEY_ZERO) && (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))) {
+	if ((IsKeyPressed(KEY_ZERO) && (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))) || buttonPress == "close") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, ")");
 	}
-	else if (IsKeyPressed(KEY_ZERO)) {
+	else if (IsKeyPressed(KEY_ZERO) || buttonPress == "zero") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "0");
 	}
-	if (IsKeyPressed(KEY_ONE)) {
+	if (IsKeyPressed(KEY_ONE) || buttonPress == "one") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "1");
 	}
-	if (IsKeyPressed(KEY_TWO)) {
+	if (IsKeyPressed(KEY_TWO) || buttonPress == "two") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "2");
 	}
-	if (IsKeyPressed(KEY_THREE)) {
+	if (IsKeyPressed(KEY_THREE) || buttonPress == "three") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "3");
 	}
-	if (IsKeyPressed(KEY_FOUR)) {
+	if (IsKeyPressed(KEY_FOUR) || buttonPress == "four") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "4");
 	}
-	if (IsKeyPressed(KEY_FIVE)) {
+	if (IsKeyPressed(KEY_FIVE) || buttonPress == "five") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "5");
 	}
-	if (IsKeyPressed(KEY_SIX) && (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))) {
+	if ((IsKeyPressed(KEY_SIX) && (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))) || buttonPress == "exponent") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "^");
 	}
-	else if (IsKeyPressed(KEY_SIX)) {
+	else if (IsKeyPressed(KEY_SIX) || buttonPress == "six") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "6");
 	}
-	if (IsKeyPressed(KEY_SEVEN)) {
+	if (IsKeyPressed(KEY_SEVEN) || buttonPress == "seven") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "7");
 	}
-	if (IsKeyPressed(KEY_EIGHT) && (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))) {
+	if ((IsKeyPressed(KEY_EIGHT) && (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))) || buttonPress == "multiply")  {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "*");
 	}
-	else if (IsKeyPressed(KEY_EIGHT)) {
+	else if (IsKeyPressed(KEY_EIGHT) || buttonPress == "eight") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "8");
 	}
-	if (IsKeyPressed(KEY_NINE) && (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))) {
+	if ((IsKeyPressed(KEY_NINE) && (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))) || buttonPress == "open") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "(");
 	}
-	else if (IsKeyPressed(KEY_NINE)) {
+	else if (IsKeyPressed(KEY_NINE) || buttonPress == "nine") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "9");
 	}
 	if (IsKeyPressed(KEY_SPACE)) {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, " ");
 	}
-	if (IsKeyPressed(KEY_EQUAL) && (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))) {
+	if ((IsKeyPressed(KEY_EQUAL) && (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))) || buttonPress == "plus") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "+");
 	}
-	if (IsKeyPressed(KEY_MINUS)) {
+	if (IsKeyPressed(KEY_MINUS) || buttonPress == "minus") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "-");
 	}
-	if (IsKeyPressed(KEY_SLASH)) {
+	if (IsKeyPressed(KEY_SLASH) || buttonPress == "slash") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, "/");
 	}
 	if (IsKeyPressed(KEY_BACKSPACE)) {
@@ -73,7 +75,7 @@ string GetUserInput(string stringUpdate) {
 			stringUpdate.erase(stringUpdate.length() + cursorPos, 1);
 		}
 	}
-	if (IsKeyPressed(KEY_PERIOD)) {
+	if (IsKeyPressed(KEY_PERIOD) || buttonPress == "period") {
 		stringUpdate.insert(stringUpdate.length() + cursorPos + 1, ".");
 	}
 	if (IsKeyDown(KEY_BACKSPACE)) {
@@ -189,5 +191,7 @@ string GetUserInput(string stringUpdate) {
 		}
 		frameCount = 0;
 	}
+
+	buttonPress = "NULL";
 	return stringUpdate;
 }
