@@ -7,12 +7,6 @@
 #define GetIntArrayLength(x) sizeof(x) / sizeof(int)
 using namespace std;
 #define print(x) cout << x
-/*
-*
-* TO-DO:
-* Click to put cursor somewhere
-* Big integer result?
-*/
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -124,10 +118,23 @@ int main(void)
 
 		Vector2 mousePosition = GetMousePosition();
 
-		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-		{
-			print("\n\nMOUSE X: " + to_string(mousePosition.x));
-			print("MOUSE Y: " + to_string(mousePosition.y) + "\n");
+		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+			size_t listSize = cursorCorX.size();
+			int closest = std::numeric_limits<int>::max();
+			int newPos = cursorPos;
+
+			if (mousePosition.y < 90) {
+				for (int i = 0; i < listSize; i++) {
+					list<int>::iterator xPlacement = std::next(cursorCorX.begin(), i);
+					int thisx = *xPlacement;
+					if (abs(mousePosition.x - thisx) < closest) {
+						closest = abs(mousePosition.x - thisx);
+						newPos = i;
+					}
+				}
+				cursorPos = newPos;
+				blinkerCount = 0;
+			}
 		}
 
 		if (IsKeyPressed(KEY_G)) {
