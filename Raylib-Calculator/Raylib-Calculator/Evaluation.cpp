@@ -49,14 +49,20 @@ string EvaluateExpression(string expression) {
 	else {
 		string lessZeroes;
 		string resultString = to_string(result);
-		bool afterdecimal = false;
+		bool decimalPresent = false;
 		for (int i = 0; i < resultString.length(); i++) {
-			if (afterdecimal == true && resultString[i] == '0') {
-				resultString.erase(i, 1);
-				i--;
-			}
 			if (resultString[i] == '.') {
-				afterdecimal = true;
+				decimalPresent = true;
+			}
+		}
+		if (decimalPresent == true) {
+			for (int i = resultString.length()-1; i > 0; i--) {
+				if (resultString[i] == '0') {
+					resultString.erase(i, 1);
+				}
+				else {
+					i = 0;
+				}
 			}
 		}
 		if (resultString[resultString.length() - 1] == '.') resultString.pop_back();

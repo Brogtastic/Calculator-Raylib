@@ -11,6 +11,7 @@ using namespace std;
 * Click to put cursor somewhere
 * Add text to buttons
 * Replace Percent with equal sign
+* Big integer result?
 */
 
 //------------------------------------------------------------------------------------
@@ -21,6 +22,7 @@ int frameCount = 0;
 int backSpaceCount = 0;
 int arrowKeyCount = 0;
 int fontSize = 40;
+int buttonFontSize = 60;
 float pixelTextMinus = 0;
 int cursorPos = -1;
 
@@ -33,6 +35,9 @@ CLITERAL(Color) numButtonColorPressed { 164, 36, 53, 255 }; // MAROON PRESS
 CLITERAL(Color) operatorButtonColor { 214, 46, 26, 255 }; // ORANGE-Y
 CLITERAL(Color) operatorColorHighlight { 240, 84, 66, 255 }; // ORANGE-Y HIGHLIGHT
 CLITERAL(Color) operatorColorPressed { 189, 33, 15, 255 }; // ORANGE-Y PRESS
+
+CLITERAL(Color) numTextColor { 200, 200, 200, 255 };
+CLITERAL(Color) operatorTextColor { 165, 165, 165, 255 };
 
 CLITERAL(Color) button1Color = numButtonColor;
 CLITERAL(Color) button2Color = numButtonColor;
@@ -191,27 +196,46 @@ int main(void)
 
 
 		DrawRectangleRounded(key1, 0.2f, 2, button1Color);
+		DrawText("1", 15 + 32, row1 + 22, buttonFontSize, numTextColor);
 		DrawRectangleRounded(key2, 0.2f, 2, button2Color);
+		DrawText("2", 15 + buttonWidth + 36, row1 + 22, buttonFontSize, numTextColor);
 		DrawRectangleRounded(key3, 0.2f, 2, button3Color);
+		DrawText("3", 15 + buttonWidth*2 + 46, row1 + 22, buttonFontSize, numTextColor);
 		DrawRectangleRounded(keyPlus, 0.2f, 2, buttonPlusColor);
+		DrawText("+", 30 + buttonWidth * 3 + 41, row1 + 22, buttonFontSize, operatorTextColor);
 		DrawRectangleRounded(keyMinus, 0.2f, 2, buttonMinusColor);
+		DrawText("-", 45 + buttonWidth * 4 + 39, row1 + 22, buttonFontSize, operatorTextColor);
 
 		DrawRectangleRounded(key4, 0.2f, 2, button4Color);
+		DrawText("4", 15 + 26, row2 + 22, buttonFontSize, numTextColor);
 		DrawRectangleRounded(key5, 0.2f, 2, button5Color);
+		DrawText("5", 15 + buttonWidth + 36, row2 + 22, buttonFontSize, numTextColor);
 		DrawRectangleRounded(key6, 0.2f, 2, button6Color);
+		DrawText("6", 15 + buttonWidth * 2 + 46, row2 + 22, buttonFontSize, numTextColor);
 		DrawRectangleRounded(keyMultiply, 0.2f, 2, buttonMultiplyColor);
+		DrawText("*", 30 + buttonWidth * 3 + 40, row2 + 22, buttonFontSize, operatorTextColor);
 		DrawRectangleRounded(keyDivide, 0.2f, 2, buttonDivideColor);
+		DrawText("/", 45 + buttonWidth * 4 + 30, row2 + 22, buttonFontSize, operatorTextColor);
 
 		DrawRectangleRounded(key7, 0.2f, 2, button7Color);
+		DrawText("7", 15 + 26, row3 + 22, buttonFontSize, numTextColor);
 		DrawRectangleRounded(key8, 0.2f, 2, button8Color);
+		DrawText("8", 15 + buttonWidth + 36, row3 + 22, buttonFontSize, numTextColor);
 		DrawRectangleRounded(key9, 0.2f, 2, button9Color);
+		DrawText("9", 15 + buttonWidth * 2 + 46, row3 + 22, buttonFontSize, numTextColor);
 		DrawRectangleRounded(keyOpenP, 0.2f, 2, buttonOpenPColor);
+		DrawText("(", 30 + buttonWidth * 3 + 42, row3 + 22, buttonFontSize, operatorTextColor);
 		DrawRectangleRounded(keyCloseP, 0.2f, 2, buttonClosePColor);
+		DrawText(")", 45 + buttonWidth * 4 + 41, row3 + 22, buttonFontSize, operatorTextColor);
 
 		DrawRectangleRounded(key0, 0.2f, 2, button0Color);
+		DrawText("0", 15 + 26, row4 + 22, buttonFontSize, numTextColor);
 		DrawRectangleRounded(keyPeriod, 0.2f, 2, buttonPeriodColor);
+		DrawText(".", 15 + buttonWidth * 2 + 57, row4 + 22, buttonFontSize, operatorTextColor);
 		DrawRectangleRounded(keyExponent, 0.2f, 2, buttonExponentColor);
+		DrawText("^", 30 + buttonWidth * 3 + 47, row4 + 22, buttonFontSize, operatorTextColor);
 		DrawRectangleRounded(keyEquals, 0.2f, 2, buttonEqualsColor);
+		DrawText("=", 45 + buttonWidth * 4 + 39, row4 + 22, buttonFontSize, operatorTextColor);
 
 		if (CheckCollisionRecs(key1, mousePos) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 			buttonPress = "one";
@@ -478,5 +502,5 @@ Arrows, A/C
 1, 2, 3, + , -
 4, 5, 6, * , /
 7, 8, 9, ( , )
-  0 , ., %, ^
+  0 , ., ^, =
 */

@@ -123,7 +123,7 @@ string GetUserInput(string stringUpdate) {
 	if ((IsKeyDown(KEY_LEFT) && ((cursorPos > -1) || (stringUpdate.length() + cursorPos + 1 > 0))) && arrowKeyCount > 20 && frameCount > 3) {
 		cursorPos -= 1;
 		int place = stringUpdate.length() + cursorPos + 1;
-		float more = 0.7f;
+		float more = (2/3);
 		if (stringUpdate[place] == '.') {
 			pixelTextMinus += 0.2f * fontSize + more;
 		}
