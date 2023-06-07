@@ -4,6 +4,8 @@
 #include "exprtk/exprtk.hpp"
 #include "Evaluation.h"
 #include <cmath>
+#include <sstream>
+#include <iomanip>
 #define print(x) cout << x
 using namespace std;
 
@@ -34,17 +36,17 @@ string EvaluateExpression(string expression) {
 	}
 
 	double result = expr.value();
-	std::cout << "Result: " << result << std::endl;
+	std::cout << "\nResult: " << result << std::endl;
 
-
-
-	if (isInteger(result)) {
-		int intValue = static_cast<int>(result);
-		if (to_string(intValue) != "-2147483648") return to_string(intValue);
-		else return "error";
-	}
-	else if (to_string(result) == "nan") {
+	if (to_string(result) == "nan" || to_string(result) == "inf") {
 		return "error";
+	}
+	else if ((result < 0.00001f) || (result > 100000000000)) {
+		// Convert double to string with scientific notation
+		std::stringstream ss;
+		ss << std::scientific << std::setprecision(3) << result;
+		std::string resultString = ss.str();
+		return resultString;
 	}
 	else {
 		string lessZeroes;

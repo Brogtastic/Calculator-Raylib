@@ -3,14 +3,14 @@
 #include <string>
 #include "UserInput.h""
 #include "Evaluation.h"
+#include <list>
+#define GetIntArrayLength(x) sizeof(x) / sizeof(int)
 using namespace std;
 #define print(x) cout << x
 /*
 *
 * TO-DO:
 * Click to put cursor somewhere
-* Add text to buttons
-* Replace Percent with equal sign
 * Big integer result?
 */
 
@@ -19,12 +19,16 @@ using namespace std;
 //------------------------------------------------------------------------------------
 
 int frameCount = 0;
+int blinkerCount = 0;
 int backSpaceCount = 0;
 int arrowKeyCount = 0;
 int fontSize = 40;
 int buttonFontSize = 60;
 float pixelTextMinus = 0;
-int cursorPos = -1;
+int cursorPos = 0;
+
+list<int> cursorCorX;
+list<int> cursorCorY;
 
 string buttonPress = "None";
 
@@ -107,6 +111,10 @@ int main(void)
 
 		frameCount += 1;
 		if (frameCount > 60) frameCount = 0;
+
+		blinkerCount += 1;
+		if (blinkerCount > 60) blinkerCount = 0;
+
 		if (IsKeyPressed(KEY_ENTER) || buttonPress == "equals") {
 			meh = EvaluateExpression(myString);
 			print(EvaluateExpression(myString));
@@ -122,6 +130,17 @@ int main(void)
 			print("MOUSE Y: " + to_string(mousePosition.y) + "\n");
 		}
 
+		if (IsKeyPressed(KEY_G)) {
+			print("\n\nCURSOR COR X: ");
+			for (const auto& element : cursorCorX) {
+				std::cout << element << " ";
+			}
+			print("\nCURSOR COR Y: ");
+			for (const auto& element : cursorCorY) {
+				std::cout << element << " ";
+			}
+		}
+
 		//----------------------------------------------------------------------------------
 
 		// Draw
@@ -135,6 +154,10 @@ int main(void)
 		typeline = "|";
 
 		int pixelTextLength = 0;
+		cursorCorX.clear();
+		cursorCorY.clear();
+		cursorCorX.push_back(12);
+		cursorCorY.push_back(10);
 
 		for (int i = 0; i < myString.length(); i++) {
 			if (myString[i] == '.') {
@@ -155,6 +178,8 @@ int main(void)
 			else {
 				pixelTextLength += 0.6f * fontSize;
 			}
+			cursorCorX.push_back(12 + pixelTextLength);
+			cursorCorY.push_back(10);
 		}
 
 		pixelTextLength -= pixelTextMinus;
@@ -163,8 +188,17 @@ int main(void)
 
 		DrawText(resultsText, 10, 60, 30, DARKGRAY);
 
-		if (frameCount < 30) {
-			DrawText(typeline, 12 + pixelTextLength, 10, fontSize, DARKGRAY);
+		if (blinkerCount < 30) {
+			//DrawText(typeline, 12 + pixelTextLength, 10, fontSize, DARKGRAY);
+			std::list<int>::iterator xPlacement = std::next(cursorCorX.begin(), cursorPos);
+			int cursorPlacement = *xPlacement;
+
+			if (cursorPos == myString.length()) {
+				DrawText(typeline, cursorPlacement, 10, fontSize, DARKGRAY);
+			}
+			else {
+				DrawText(typeline, cursorPlacement-5, 10, fontSize, DARKGRAY);
+			}
 		}
 
 		//ROW1 (1   2    3   +   -)
