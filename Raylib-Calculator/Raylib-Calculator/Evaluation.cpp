@@ -40,7 +40,7 @@ string EvaluateExpression(string expression) {
 	}
 
 	double result = expr.value();
-	std::cout << "\nResult: " << result << std::endl;
+	//std::cout << "\nResult: " << result << std::endl;
 
 	if (to_string(result) == "nan" || to_string(result) == "inf") {
 		return "error";

@@ -35,7 +35,7 @@ CLITERAL(Color) numButtonColorPressed { 164, 36, 53, 255 }; // MAROON PRESS
 
 CLITERAL(Color) operatorButtonColor { 214, 46, 26, 255 }; // ORANGE-Y
 CLITERAL(Color) operatorColorHighlight { 240, 84, 66, 255 }; // ORANGE-Y HIGHLIGHT
-CLITERAL(Color) operatorColorPressed { 189, 33, 15, 255 }; // ORANGE-Y PRESS
+CLITERAL(Color) operatorColorPressed { 174, 23, 10, 255 }; // ORANGE-Y PRESS
 
 CLITERAL(Color) numTextColor { 200, 200, 200, 255 };
 CLITERAL(Color) operatorTextColor { 200, 200, 200, 200 };
@@ -110,9 +110,8 @@ int main(void)
 		blinkerCount += 1;
 		if (blinkerCount > 60) blinkerCount = 0;
 
-		if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_EQUAL) || buttonPress == "equals") {
+		if (IsKeyPressed(KEY_ENTER) || (IsKeyPressed(KEY_EQUAL) && (!IsKeyDown(KEY_LEFT_SHIFT) && !IsKeyDown(KEY_RIGHT_SHIFT))) || buttonPress == "equals") {
 			evaluatedValue = EvaluateExpression(myString);
-			print(EvaluateExpression(myString));
 		}
 		myString = GetUserInput(myString);
 
