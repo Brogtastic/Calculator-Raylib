@@ -20,6 +20,7 @@ int fontSize = 40;
 int buttonFontSize = 60;
 float pixelTextMinus = 0;
 int cursorPos = 0;
+bool canType = true;
 
 list<int> cursorCorX;
 list<int> cursorCorY;
@@ -73,9 +74,6 @@ int main(void)
 
 	InitWindow(screenWidth, screenHeight, "raylib calculator");
 
-	Vector2 ballPosition = { (float)screenWidth / 2, (float)screenHeight / 2 };
-	Vector2 targetPosition = { (float)screenWidth / 2, (float)screenHeight / 2 };
-
 	string myString = "";
 	string meh = "";
 	const char * resultsText = myString.c_str();
@@ -117,9 +115,9 @@ int main(void)
 
 
 		Vector2 mousePosition = GetMousePosition();
+		size_t listSize = cursorCorX.size();
 
 		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-			size_t listSize = cursorCorX.size();
 			int closest = std::numeric_limits<int>::max();
 			int newPos = cursorPos;
 
@@ -137,16 +135,22 @@ int main(void)
 			}
 		}
 
-		if (IsKeyPressed(KEY_G)) {
-			print("\n\nCURSOR COR X: ");
-			for (const auto& element : cursorCorX) {
-				std::cout << element << " ";
+		
+		if (!cursorCorX.empty()) {
+			int lastElement = cursorCorX.back();
+			if (lastElement > 447) {
+				canType = false;
 			}
-			print("\nCURSOR COR Y: ");
-			for (const auto& element : cursorCorY) {
-				std::cout << element << " ";
+			else {
+				canType = true;
 			}
 		}
+		else {
+			canType == true;
+		}
+
+
+		
 
 		//----------------------------------------------------------------------------------
 
