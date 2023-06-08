@@ -13,6 +13,7 @@ extern int fontSize;
 extern float pixelTextMinus;
 extern int cursorPos;
 extern bool canType;
+extern string evaluatedValue;
 
 extern string buttonPress;
 
@@ -114,6 +115,7 @@ string GetUserInput(string stringUpdate) {
 			cursorPos += 1;
 			blinkerCount = 0;
 		}
+		
 	}
 	if (IsKeyPressed(KEY_BACKSPACE)) {
 		if ((stringUpdate.length() > 0) && (cursorPos > 0)) {
@@ -160,6 +162,18 @@ string GetUserInput(string stringUpdate) {
 		cursorPos += 1;
 		blinkerCount = 0;
 		frameCount = 0;
+	}
+
+	if (buttonPress == "clear") {
+		cursorPos = stringUpdate.length();
+		int clearLength = stringUpdate.length();
+		if (stringUpdate.length() > 0) {
+			for (int i = 0; i < clearLength; i++) {
+				stringUpdate.erase(cursorPos - 1, 1);
+				cursorPos -= 1;
+			}
+		}
+		evaluatedValue = "";
 	}
 
 	buttonPress = "NULL";

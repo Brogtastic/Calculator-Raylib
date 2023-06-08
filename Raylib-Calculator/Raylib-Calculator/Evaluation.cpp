@@ -33,6 +33,10 @@ string EvaluateExpression(string expression) {
 	exprtk::parser<double> parser;
 	if (!parser.compile(expression, expr)) {
 		std::cerr << "Compilation error: " << parser.error() << std::endl;
+
+		if (parser.error() == "ERR001 - Empty expression!") {
+			return "";
+		}
 	}
 
 	double result = expr.value();
