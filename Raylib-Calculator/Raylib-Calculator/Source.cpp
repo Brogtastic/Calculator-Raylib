@@ -1,7 +1,7 @@
 #include "raylib.h"
 #include <iostream>
 #include <string>
-#include "UserInput.h""
+#include "UserInput.h"
 #include "Evaluation.h"
 #include <list>
 #define GetIntArrayLength(x) sizeof(x) / sizeof(int)
@@ -67,6 +67,8 @@ CLITERAL(Color) buttonEqualsColor = operatorButtonColor;
 
 
 CLITERAL(Color) backgroundColor { 212, 192, 190, 255 }; // Background color
+
+
 
 int main(void)
 {
