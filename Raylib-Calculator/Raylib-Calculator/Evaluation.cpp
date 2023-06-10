@@ -44,7 +44,7 @@ string EvaluateExpression(string expression) {
 	if (to_string(result) == "nan" || to_string(result) == "inf") {
 		return "error";
 	}
-	else if ((result > 0 && (result < 0.00001f) || (result > 100000000000)) || (result < 0 && (result > -0.00001f) || (result < -100000000000))) {
+	else if ((result > 0 && (result < 0.00001f || result > 100000000000)) || (result < 0 && (result > -0.00001f || result < -100000000000))) {
 		// Convert double to string with scientific notation
 		std::stringstream ss;
 		ss << std::scientific << std::setprecision(3) << result;

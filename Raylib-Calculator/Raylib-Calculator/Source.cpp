@@ -79,6 +79,8 @@ int main(void)
 
 	InitWindow(screenWidth, screenHeight, "raylib calculator");
 
+	Vector2 touchPosition = { 0, 0 };
+
 	string myString = "";
 	evaluatedValue = "";
 	resultsText = myString.c_str();
@@ -92,7 +94,6 @@ int main(void)
 	float row2 = buttonHeight + row1 + spacing;
 	float row3 = buttonHeight + row2 + spacing;
 	float row4 = buttonHeight + row3 + spacing;
-	float row5 = buttonHeight + row4 + spacing;
 
 
 	SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
@@ -150,7 +151,7 @@ int main(void)
 			}
 		}
 		else {
-			canType == true;
+			canType = true;
 		}
 
 
@@ -569,5 +570,5 @@ Arrows, A/C
 1, 2, 3, + , -
 4, 5, 6, * , /
 7, 8, 9, ( , )
-  0 , ., ^, =
+ A/C, 0 , ., ^, =
 */
