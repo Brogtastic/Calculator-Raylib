@@ -5,6 +5,9 @@
 #include "Evaluation.h"
 #include <list>
 #define GetIntArrayLength(x) sizeof(x) / sizeof(int)
+
+#define BUTTON_PRESSED (CheckCollisionRecs(ButtonRectangle, mousePos) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+
 using namespace std;
 #define print(x) cout << x
 
@@ -18,24 +21,20 @@ int backSpaceCount = 0;
 int arrowKeyCount = 0;
 int fontSize = 40;
 int buttonFontSize = 60;
+float pixelTextMinus = 0;
 int cursorPos = 0;
 bool canType = true;
 const char * resultsText;
 string evaluatedValue;
-
-int screenWidth = 500;
-int screenHeight = 800;
-
-float buttonWidth = screenWidth * 0.16842105f;
-float buttonHeight = screenHeight * 0.15748031f;
+float buttonWidth = 80.0f;
+float buttonHeight = 100.0f;
 float row1 = 175.0f;
-float spacing = buttonWidth * 0.1875f;
-float numSpacing = spacing + spacing * 0.75f;
-float rowSpacing = buttonHeight * 0.1875f;
-float col[5] = { spacing*1.2f, spacing * 2.0f, spacing * 2.5f, spacing * 1.8f, spacing*1.4f };
-float row2 = buttonHeight + row1 + rowSpacing;
-float row3 = buttonHeight + row2 + rowSpacing;
-float row4 = buttonHeight + row3 + rowSpacing;
+float spacing = 15.0f;
+float row2 = buttonHeight + row1 + spacing;
+float row3 = buttonHeight + row2 + spacing;
+float row4 = buttonHeight + row3 + spacing;
+
+Rectangle mousePos = { GetMousePosition().x, GetMousePosition().y, 2, 2 };
 
 list<int> cursorCorX;
 list<int> cursorCorY;
@@ -53,66 +52,93 @@ CLITERAL(Color) operatorColorPressed { 174, 23, 10, 255 }; // ORANGE-Y PRESS
 CLITERAL(Color) numTextColor { 200, 200, 200, 255 };
 CLITERAL(Color) operatorTextColor { 200, 200, 200, 200 };
 
-CLITERAL(Color) button1Color = numButtonColor;
-CLITERAL(Color) button2Color = numButtonColor;
-CLITERAL(Color) button3Color = numButtonColor;
-CLITERAL(Color) buttonPlusColor = operatorButtonColor;
-CLITERAL(Color) buttonMinusColor = operatorButtonColor;
-
-CLITERAL(Color) button4Color = numButtonColor;
-CLITERAL(Color) button5Color = numButtonColor;
-CLITERAL(Color) button6Color = numButtonColor;
-CLITERAL(Color) buttonMultiplyColor = operatorButtonColor;
-CLITERAL(Color) buttonDivideColor = operatorButtonColor;
-
-CLITERAL(Color) button7Color = numButtonColor;
-CLITERAL(Color) button8Color = numButtonColor;
-CLITERAL(Color) button9Color = numButtonColor;
-CLITERAL(Color) buttonOpenPColor = operatorButtonColor;
-CLITERAL(Color) buttonClosePColor = operatorButtonColor;
-
-CLITERAL(Color) buttonACColor = operatorButtonColor;
-CLITERAL(Color) button0Color = numButtonColor;
-CLITERAL(Color) buttonPeriodColor = operatorButtonColor;
-CLITERAL(Color) buttonExponentColor = operatorButtonColor;
-CLITERAL(Color) buttonEqualsColor = operatorButtonColor;
 
 
 
 CLITERAL(Color) backgroundColor { 212, 192, 190, 255 }; // Background color
 
 
-void AdjustScreenSize() {
-	screenWidth = GetScreenWidth();
-	screenHeight = GetScreenHeight();
+class Button{
+public:
+	// Attributes
+	Rectangle ButtonRectangle;
+	string Text;
+	CLITERAL(Color) ButtonColor;
+	int XAdjust;
+	int YAdjust;
+	float Row;
+	int Column;
+	bool KeyPressed;
+	bool KeyHover;
 
-	buttonWidth = screenWidth * 0.16842105f;
-	buttonHeight = screenHeight * 0.15748031f;
-	row1 = 175.0f;
-	spacing = buttonWidth * 0.1875f;
-	numSpacing = spacing + spacing * 0.75f;
-	rowSpacing = buttonHeight * 0.1875f;
-	col[0] = spacing * 1.2f;
-	col[1] = spacing * 2.0f;
-	col[2] = spacing * 2.5f;
-	col[3] = spacing * 1.8f;
-	col[4] = spacing * 1.4f;
-	row2 = buttonHeight + row1 + rowSpacing;
-	row3 = buttonHeight + row2 + rowSpacing;
-	row4 = buttonHeight + row3 + rowSpacing;
-}
+	// Constructor
+	Button(Rectangle rectangle, string text, int xadjust, int yadjust, float row, int column, bool keyPressed, bool keyHover)
+		: ButtonRectangle(rectangle), Text(text), XAdjust(xadjust), YAdjust(yadjust), Row(row), Column(column), KeyPressed(keyPressed), KeyHover(keyHover){}
+
+	virtual void Render() {
+		DrawText(Text.c_str, (buttonWidth*Column) + XAdjust, Row + YAdjust, buttonFontSize, ButtonColor);
+		DrawRectangleRounded(ButtonRectangle, 0.2f, 2, ButtonColor);
+
+		if (BUTTON_PRESSED) {
+			buttonPress = "one";
+		}
+		else if ((CheckCollisionRecs(key1, mousePos) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) || (IsKeyDown(KEY_ONE))) {
+			button1Color = numButtonColorPressed;
+		}
+		else if (CheckCollisionRecs(key1, mousePos)) {
+			button1Color = numButtonColorHighlight;
+		}
+		else {
+			button1Color = numButtonColor;
+		}
+	}
+
+};
+
+class NumButton : public Button {
+public:
+	// Constructor
+	NumButton(Rectangle rectangle, string text, int xadjust, int yadjust, float row, int column, int key, bool keyPressed, bool keyHover)
+		: Button(rectangle, text, xadjust, yadjust, row, column, key, keyPressed, keyHover) {
+		ButtonColor = numButtonColor;
+	}
+};
 
 
-int main()
+class OpButton : public Button {
+public:
+	// Constructor
+	OpButton(Rectangle rectangle, string text, int xadjust, int yadjust, float row, int column, int key, bool keyPressed, bool keyHover)
+		: Button(rectangle, text, xadjust, yadjust, row, column, key, keyPressed, keyHover) {
+		ButtonColor = operatorButtonColor;
+	}
+};
+
+class ACButton : public Button {
+public:
+
+	ACButton(Rectangle rectangle, string text, int xadjust, int yadjust, float row, int column, int key, bool keyPressed, bool keyHover)
+		: Button(rectangle, text, xadjust, yadjust, row, column, key, keyPressed, keyHover) {
+		ButtonColor = operatorButtonColor;
+	}
+
+	void Render() override {
+		DrawRectangleRounded(ButtonRectangle, 0.2f, 2, ButtonColor);
+		DrawText("A", 15 + 20, row4 + 22, buttonFontSize / 2, operatorTextColor);
+		DrawText("/", 15 + 28, row4 + 40, buttonFontSize / 2, operatorTextColor);
+		DrawText("C", 15 + 41, row4 + 55, buttonFontSize / 2, operatorTextColor);
+	}
+};
+
+
+int main(void)
 {
 	// Initialization
 	//--------------------------------------------------------------------------------------
-	//SetTraceLogLevel(LOG_NONE);
-
-	fontSize = screenWidth * 0.08432f;
+	const int screenWidth = 475;
+	const int screenHeight = 635;
 
 	InitWindow(screenWidth, screenHeight, "raylib calculator");
-	SetWindowState(FLAG_WINDOW_RESIZABLE);
 
 	Vector2 touchPosition = { 0, 0 };
 
@@ -132,8 +158,7 @@ int main()
 		// Update
 		//----------------------------------------------------------------------------------
 
-		AdjustScreenSize();
-		Rectangle mousePos = { GetMousePosition().x, GetMousePosition().y, 2, 2 };
+		mousePos = { GetMousePosition().x, GetMousePosition().y, 2, 2};
 
 		frameCount += 1;
 		if (frameCount > 60) frameCount = 0;
@@ -168,7 +193,7 @@ int main()
 			}
 		}
 
-
+		
 		if (!cursorCorX.empty()) {
 			int lastElement = cursorCorX.back();
 			if (lastElement > 447) {
@@ -183,7 +208,7 @@ int main()
 		}
 
 
-
+		
 
 		//----------------------------------------------------------------------------------
 
@@ -226,6 +251,8 @@ int main()
 			cursorCorY.push_back(20);
 		}
 
+		pixelTextLength -= pixelTextMinus;
+
 		DrawText(calculationsText, 20, 20, fontSize, DARKGRAY);
 
 		DrawText(resultsText, 20, 80, 30, DARKGRAY);
@@ -239,84 +266,38 @@ int main()
 				DrawText(typeline, cursorPlacement, 20, fontSize, DARKGRAY);
 			}
 			else {
-				DrawText(typeline, cursorPlacement - 4, 20, fontSize, DARKGRAY);
+				DrawText(typeline, cursorPlacement-4, 20, fontSize, DARKGRAY);
 			}
 		}
 
 		//ROW1 (1   2    3   +   -)
-		Rectangle key1 = { spacing, row1, buttonWidth, buttonHeight };
-		Rectangle key2 = { spacing * 3 + buttonWidth - 20, row1, buttonWidth, buttonHeight };
-		Rectangle key3 = { spacing * 9 + buttonWidth - 20, row1, buttonWidth, buttonHeight };
-		Rectangle keyPlus = { spacing * 15 + buttonWidth - 20, row1, buttonWidth, buttonHeight };
-		Rectangle keyMinus = { spacing * 21 + buttonWidth - 20, row1, buttonWidth, buttonHeight };
+		NumButton button1({ 15, row1, buttonWidth, buttonHeight }, "1", 15 + 32, 22, row1, 0, KEY_ONE);
+		NumButton button2({ spacing * 3 + buttonWidth - 20, row1, buttonWidth, buttonHeight }, "2", 15+36, 22, row1, 1, KEY_TWO);
+		NumButton button3({ spacing * 9 + buttonWidth - 20, row1, buttonWidth, buttonHeight }, "3", 15 + 46, 22, row1, 2, KEY_THREE);
+		OpButton buttonPlus({ spacing * 15 + buttonWidth - 20, row1, buttonWidth, buttonHeight }, "+", 30 + 41, 22, row1, 3, KEY_FOUR);
+		OpButton buttonMinus({ spacing * 21 + buttonWidth - 20, row1, buttonWidth, buttonHeight }, "-", 45 + 39, 22, row1, 4, KEY_FIVE);
 
 		//ROW2 (4   5   6   *   /)
-		Rectangle key4 = { spacing, row2, buttonWidth, buttonHeight };
-		Rectangle key5 = { spacing * 3 + buttonWidth - 20, row2, buttonWidth, buttonHeight };
-		Rectangle key6 = { spacing * 9 + buttonWidth - 20, row2, buttonWidth, buttonHeight };
-		Rectangle keyMultiply = { spacing * 15 + buttonWidth - 20, row2, buttonWidth, buttonHeight };
-		Rectangle keyDivide = { spacing * 21 + buttonWidth - 20, row2, buttonWidth, buttonHeight };
+		NumButton button4({ 15, row2, buttonWidth, buttonHeight }, "4", 15 + 26, 22, row2, 0);
+		NumButton button5({ spacing * 3 + buttonWidth - 20, row2, buttonWidth, buttonHeight }, "5", 15 + 36, 22, row2, 1);
+		NumButton button6({ spacing * 9 + buttonWidth - 20, row2, buttonWidth, buttonHeight }, "6", 15 + 46, 22, row2, 2);
+		OpButton buttonMultiply({ spacing * 15 + buttonWidth - 20, row2, buttonWidth, buttonHeight }, "*", 30 + 40, 22, row2, 3);
+		OpButton buttonDivide({ spacing * 21 + buttonWidth - 20, row2, buttonWidth, buttonHeight }, 45 + 30, 22, row2, 4);
 
 		//ROW3 (7   8   9   (   ))
-		Rectangle key7 = { spacing, row3, buttonWidth, buttonHeight };
-		Rectangle key8 = { spacing * 3 + buttonWidth - 20, row3, buttonWidth, buttonHeight };
-		Rectangle key9 = { spacing * 9 + buttonWidth - 20, row3, buttonWidth, buttonHeight };
-		Rectangle keyOpenP = { spacing * 15 + buttonWidth - 20, row3, buttonWidth, buttonHeight };
-		Rectangle keyCloseP = { spacing * 21 + buttonWidth - 20, row3, buttonWidth, buttonHeight };
+		NumButton button7({ 15, row3, buttonWidth, buttonHeight }, "7", 15 + 26, 22, row3, 0);
+		NumButton button8({ spacing * 3 + buttonWidth - 20, row3, buttonWidth, buttonHeight }, "8", 15+36, 22, row3, 1);
+		NumButton button9({ spacing * 9 + buttonWidth - 20, row3, buttonWidth, buttonHeight }, "9", 15 + 46, 22, row3, 2);
+		OpButton buttonOpenP({ spacing * 15 + buttonWidth - 20, row3, buttonWidth, buttonHeight }, "(", 30 + 42, 22, row3, 3);
+		OpButton buttonCloseP({ spacing * 21 + buttonWidth - 20, row3, buttonWidth, buttonHeight }, ")", 45 + 41, 22, row3, 4);
 
 		//ROW4 (   0    .   %   ^)
-		Rectangle keyAC = { spacing, row4, buttonWidth, buttonHeight };
-		Rectangle key0 = { spacing * 3 + buttonWidth - 20, row4, buttonWidth, buttonHeight };
-		Rectangle keyPeriod = { spacing * 9 + buttonWidth - 20, row4, buttonWidth, buttonHeight };
-		Rectangle keyExponent = { spacing * 15 + buttonWidth - 20, row4, buttonWidth, buttonHeight };
-		Rectangle keyEquals = { spacing * 21 + buttonWidth - 20, row4, buttonWidth, buttonHeight };
+		ACButton buttonAC({ 15, row4, buttonWidth, buttonHeight }, "A/C", 15 + 20, 22, row4, 0);
+		NumButton button0({ spacing * 3 + buttonWidth - 20, row4, buttonWidth, buttonHeight }, "0", 15+36, 22, row4, 1);
+		OpButton buttonPeriod({ spacing * 9 + buttonWidth - 20, row4, buttonWidth, buttonHeight }, ".", 15 + 57, 22, row4, 2);
+		OpButton buttonExponent({ spacing * 15 + buttonWidth - 20, row4, buttonWidth, buttonHeight }, "^", 30+47, 22, row4, 3);
+		OpButton buttonEquals({ spacing * 21 + buttonWidth - 20, row4, buttonWidth, buttonHeight }, "=", 45+39, 22, row4, 4);
 
-
-		DrawRectangleRounded(key1, 0.2f, 2, button1Color);
-		DrawText("1", numSpacing + col[0], row1 + rowSpacing, buttonFontSize, numTextColor);
-		DrawRectangleRounded(key2, 0.2f, 2, button2Color);
-		DrawText("2", numSpacing + buttonWidth + col[1], row1 + rowSpacing, buttonFontSize, numTextColor);
-		DrawRectangleRounded(key3, 0.2f, 2, button3Color);
-		DrawText("3", numSpacing + buttonWidth * 2 + col[2], row1 + rowSpacing, buttonFontSize, numTextColor);
-		DrawRectangleRounded(keyPlus, 0.2f, 2, buttonPlusColor);
-		DrawText("+", numSpacing*2 + buttonWidth * 3 + col[3], row1 + rowSpacing, buttonFontSize, operatorTextColor);
-		DrawRectangleRounded(keyMinus, 0.2f, 2, buttonMinusColor);
-		DrawText("-", numSpacing*2.5f + buttonWidth * 4 + col[4], row1 + rowSpacing, buttonFontSize, operatorTextColor);
-
-		DrawRectangleRounded(key4, 0.2f, 2, button4Color);
-		DrawText("4", numSpacing + col[0], row2 + rowSpacing, buttonFontSize, numTextColor);
-		DrawRectangleRounded(key5, 0.2f, 2, button5Color);
-		DrawText("5", numSpacing + buttonWidth + col[1], row2 + rowSpacing, buttonFontSize, numTextColor);
-		DrawRectangleRounded(key6, 0.2f, 2, button6Color);
-		DrawText("6", numSpacing + buttonWidth * 2 + col[2], row2 + rowSpacing, buttonFontSize, numTextColor);
-		DrawRectangleRounded(keyMultiply, 0.2f, 2, buttonMultiplyColor);
-		DrawText("*", numSpacing * 2 + buttonWidth * 3 + col[3], row2 + rowSpacing, buttonFontSize, operatorTextColor);
-		DrawRectangleRounded(keyDivide, 0.2f, 2, buttonDivideColor);
-		DrawText("/", numSpacing*2.5f + buttonWidth * 4 + col[4], row2 + rowSpacing, buttonFontSize, operatorTextColor);
-
-		DrawRectangleRounded(key7, 0.2f, 2, button7Color);
-		DrawText("7", numSpacing + col[0], row3 + rowSpacing, buttonFontSize, numTextColor);
-		DrawRectangleRounded(key8, 0.2f, 2, button8Color);
-		DrawText("8", numSpacing + buttonWidth + col[1], row3 + rowSpacing, buttonFontSize, numTextColor);
-		DrawRectangleRounded(key9, 0.2f, 2, button9Color);
-		DrawText("9", numSpacing + buttonWidth * 2 + col[2], row3 + rowSpacing, buttonFontSize, numTextColor);
-		DrawRectangleRounded(keyOpenP, 0.2f, 2, buttonOpenPColor);
-		DrawText("(", numSpacing*2 + buttonWidth * 3 + col[3], row3 + rowSpacing, buttonFontSize, operatorTextColor);
-		DrawRectangleRounded(keyCloseP, 0.2f, 2, buttonClosePColor);
-		DrawText(")", numSpacing*2.5f + buttonWidth * 4 + col[4], row3 + rowSpacing, buttonFontSize, operatorTextColor);
-
-		DrawRectangleRounded(keyAC, 0.2f, 2, buttonACColor);
-		DrawText("A", numSpacing + 20, row4 + rowSpacing, buttonFontSize / 2, operatorTextColor);
-		DrawText("/", numSpacing + 28, row4 + rowSpacing*2.0f, buttonFontSize / 2, operatorTextColor);
-		DrawText("C", numSpacing + 41, row4 + rowSpacing*2.8f, buttonFontSize / 2, operatorTextColor);
-		DrawRectangleRounded(key0, 0.2f, 2, button0Color);
-		DrawText("0", numSpacing + buttonWidth + col[1], row4 + rowSpacing, buttonFontSize, numTextColor);
-		DrawRectangleRounded(keyPeriod, 0.2f, 2, buttonPeriodColor);
-		DrawText(".", numSpacing + buttonWidth * 2 + col[2], row4 + rowSpacing, buttonFontSize, operatorTextColor);
-		DrawRectangleRounded(keyExponent, 0.2f, 2, buttonExponentColor);
-		DrawText("^", numSpacing*2.0f + buttonWidth * 3 + col[3], row4 + rowSpacing, buttonFontSize, operatorTextColor);
-		DrawRectangleRounded(keyEquals, 0.2f, 2, buttonEqualsColor);
-		DrawText("=", numSpacing*2.5f + buttonWidth * 4 + col[4], row4 + rowSpacing, buttonFontSize, operatorTextColor);
 
 		if (CheckCollisionRecs(key1, mousePos) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 			buttonPress = "one";
@@ -334,7 +315,7 @@ int main()
 		if (CheckCollisionRecs(key2, mousePos) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 			buttonPress = "two";
 		}
-		else if ((CheckCollisionRecs(key2, mousePos) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) || (IsKeyDown(KEY_TWO))) {
+		else if ((CheckCollisionRecs(key2, mousePos) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) || (IsKeyDown(KEY_TWO)))  {
 			button2Color = numButtonColorPressed;
 		}
 		else if (CheckCollisionRecs(key2, mousePos)) {
@@ -347,7 +328,7 @@ int main()
 		if (CheckCollisionRecs(key3, mousePos) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 			buttonPress = "three";
 		}
-		else if ((CheckCollisionRecs(key3, mousePos) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) || (IsKeyDown(KEY_THREE))) {
+		else if ((CheckCollisionRecs(key3, mousePos) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) || (IsKeyDown(KEY_THREE)))  {
 			button3Color = numButtonColorPressed;
 		}
 		else if (CheckCollisionRecs(key3, mousePos)) {
@@ -464,7 +445,7 @@ int main()
 		if (CheckCollisionRecs(keyMinus, mousePos) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 			buttonPress = "minus";
 		}
-		else if ((CheckCollisionRecs(keyMinus, mousePos) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) || (IsKeyDown(KEY_MINUS))) {
+		else if ((CheckCollisionRecs(keyMinus, mousePos) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) || (IsKeyDown(KEY_MINUS))) { 
 			buttonMinusColor = operatorColorPressed;
 		}
 		else if (CheckCollisionRecs(keyMinus, mousePos)) {

@@ -10,7 +10,6 @@ extern int blinkerCount;
 extern int backSpaceCount;
 extern int arrowKeyCount;
 extern int fontSize;
-extern float pixelTextMinus;
 extern int cursorPos;
 extern bool canType;
 extern string evaluatedValue;
@@ -179,3 +178,4 @@ string GetUserInput(string stringUpdate) {
 	buttonPress = "NULL";
 	return stringUpdate;
 }
+
